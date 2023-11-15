@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -35,6 +36,11 @@ namespace GuidReplace
 				int lastStart = 0;
 				StringBuilder sb = new StringBuilder();
 
+				Match firstMatch = matches[0];
+				string firstString = text.Substring(firstMatch.Index, 36);
+				char firstLetter = firstString.SkipWhile(x => Char.IsDigit(x)).First();
+				bool isUpper = Char.IsUpper(firstLetter);
+
 				foreach (Match m in matches)
 				{
 					sb.Append(text.Substring(lastStart, m.Index - lastStart));
@@ -44,14 +50,19 @@ namespace GuidReplace
 						pairs.Add(oldGuid, Guid.NewGuid());
 
 					Guid newGuid = pairs[oldGuid];
-					sb.Append(newGuid.ToString());
+					string newString = newGuid.ToString();
+
+					if (isUpper)
+						newString = newString.ToUpper();
+
+					sb.Append(newString);
 					lastStart = m.Index + m.Length;
 				}
 
 				sb.Append(text.Substring(lastStart));
 
 				FileInfo fi = new FileInfo(filename);
-				string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}";
+				string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
 				string newFilename = $"{fi.Directory}\\{newName}{fi.Extension}";
 
 				File.WriteAllText(newFilename, sb.ToString());
