@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace GuidReplace
 		{
 			if (args.Length == 0)
 			{
-				Console.WriteLine($"run with \"guidrep filename\" or drag-n-drop file to exe");
+				Console.WriteLine($"run with \"guidreplace filename\" or drag-n-drop file to exe");
 				Console.ReadKey();
 			}
 			else
