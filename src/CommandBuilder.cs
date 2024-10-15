@@ -1,3 +1,19 @@
+using System.CommandLine;
+
+namespace GuidReplace
+{
+	public static class CommandBuilder
+	{
+		public static RootCommand CreateRootCommand()
+		{
+			var rootCommand = new RootCommand("Guid Replace tool\nFor more information, visit https://github.com/jurakovic/guidreplace");
+
+			return rootCommand;
+		}
+	}
+}
+
+
 /*
 using System;
 using System.Collections.Generic;
