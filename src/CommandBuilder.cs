@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -48,9 +47,8 @@ namespace GuidReplace
 
 		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename, bool quiet)
 		{
-			//Debugger.Launch();
+			//System.Diagnostics.Debugger.Launch();
 
-			//string filename = args[0].Trim('"');
 			string inputText;
 
 			if (!String.IsNullOrEmpty(inputFilename))
@@ -66,8 +64,16 @@ namespace GuidReplace
 			}
 			else
 			{
-				// Read from stdin
-				inputText = await Console.In.ReadToEndAsync();
+				if (Console.IsInputRedirected)
+				{
+					inputText = await Console.In.ReadToEndAsync();
+				}
+				else
+				{
+					if (!quiet)
+						Console.Error.WriteLine("Error: No input file specified and no data in stdin.");
+					return 1;
+				}
 			}
 
 			if (String.IsNullOrWhiteSpace(inputText))
