@@ -24,7 +24,6 @@ namespace GuidReplace
 
 			var outputFileOption = new Option<string?>(new[] { "--output", "-o" }, "The output file to write the result to.");
 
-
 			rootCommand.Add(inPlaceOption);
 			rootCommand.Add(inputFileArgument);
 			rootCommand.Add(outputFileOption);
@@ -45,20 +44,11 @@ namespace GuidReplace
 
 		private static Task ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
 		{
-			//if (args.Length == 0)
-			//{
-			//	Console.WriteLine($"Run with \"guidreplace filename\" or drag-n-drop file to exe");
-			//	Console.ReadKey();
-			//	return;
-			//}
-
 			//string filename = args[0].Trim('"');
 
 			if (!File.Exists(inputFilename))
 			{
 				Console.WriteLine($"File not found");
-				//Console.WriteLine($"Press any key to exit");
-				//Console.ReadKey();
 				return Task.CompletedTask;
 			}
 
@@ -68,19 +58,16 @@ namespace GuidReplace
 			if (matchesCount <= 0)
 			{
 				Console.WriteLine($"No guids in file");
-				//Console.WriteLine($"Press any key to exit");
-				//Console.ReadKey();
 				return Task.CompletedTask;
 			}
 			else
 			{
 				FileInfo fi = new FileInfo(inputFilename);
 				string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
-				string newFilename = $"{fi.Directory}\\{newName}{fi.Extension}";
+				string newFilename = $"{newName}{fi.Extension}";
 
 				File.WriteAllText(newFilename, output);
 				Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
-				//Console.WriteLine($"Press any key to exit");
 
 				return Task.CompletedTask;
 			}
