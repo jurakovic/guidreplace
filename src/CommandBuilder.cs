@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GuidReplace
@@ -45,7 +45,6 @@ namespace GuidReplace
 
 		private static Task ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
 		{
-
 			//if (args.Length == 0)
 			//{
 			//	Console.WriteLine($"Run with \"guidreplace filename\" or drag-n-drop file to exe");
@@ -64,18 +63,42 @@ namespace GuidReplace
 			}
 
 			string text = File.ReadAllText(inputFilename);
-			string pattern = "[a-fA-F0-9]{8}-([a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}";
+			string output = ReplaceGuids(text, out int matchesCount, out int pairsCount);
 
-			Dictionary<Guid, Guid> pairs = new Dictionary<Guid, Guid>();
-			MatchCollection matches = Regex.Matches(text, pattern);
-
-			if (matches.Count <= 0)
+			if (matchesCount <= 0)
 			{
 				Console.WriteLine($"No guids in file");
 				//Console.WriteLine($"Press any key to exit");
 				//Console.ReadKey();
 				return Task.CompletedTask;
 			}
+			else
+			{
+				FileInfo fi = new FileInfo(inputFilename);
+				string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
+				string newFilename = $"{fi.Directory}\\{newName}{fi.Extension}";
+
+				File.WriteAllText(newFilename, output);
+				Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
+				//Console.WriteLine($"Press any key to exit");
+
+				return Task.CompletedTask;
+			}
+		}
+
+		static string ReplaceGuids(string text, out int matchesCount, out int pairsCount)
+		{
+			matchesCount = 0;
+			pairsCount = 0;
+
+			string pattern = "[a-fA-F0-9]{8}-([a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}";
+
+			Dictionary<Guid, Guid> pairs = new Dictionary<Guid, Guid>();
+			MatchCollection matches = Regex.Matches(text, pattern);
+			matchesCount = matches.Count;
+
+			if (matchesCount <= 0)
+				return String.Empty;
 
 			int lastStart = 0;
 			StringBuilder sb = new StringBuilder();
@@ -103,17 +126,9 @@ namespace GuidReplace
 				lastStart = m.Index + m.Length;
 			}
 
+			pairsCount = pairs.Count;
 			sb.Append(text.Substring(lastStart));
-
-			FileInfo fi = new FileInfo(inputFilename);
-			string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
-			string newFilename = $"{fi.Directory}\\{newName}{fi.Extension}";
-
-			File.WriteAllText(newFilename, sb.ToString());
-			Console.WriteLine($"Done. {matches.Count} guids replaced, {pairs.Count} pairs.");
-			//Console.WriteLine($"Press any key to exit");
-
-			return Task.CompletedTask;
+			return sb.ToString();
 		}
 	}
 }
