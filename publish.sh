@@ -77,7 +77,7 @@ function release() {
       if [ ! $yn = "y" ]; then exit; fi
     fi
 
-    git checkout release && git pull || git switch -c release origin/release
+    git checkout release >/dev/null 2>&1 && git pull || git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
 
     local url="https://github.com/jurakovic/guidreplace/releases/tag/v$VERSION"
 
