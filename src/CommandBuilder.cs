@@ -1,4 +1,11 @@
+using System.Collections.Generic;
+using System;
 using System.CommandLine;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GuidReplace
 {
@@ -8,44 +15,55 @@ namespace GuidReplace
 		{
 			var rootCommand = new RootCommand("Guid Replace tool\nFor more information, visit https://github.com/jurakovic/guidreplace");
 
+			var inPlaceOption = new Option<bool>(new[] { "--in-place", "-i" }, "Edit the input file in place.");
+
+			var inputFileArgument = new Argument<string>("inputFile", "The input file to process. If not specified, reads from standard input.")
+			{
+				Arity = ArgumentArity.ZeroOrOne
+			};
+
+			var outputFileOption = new Option<string?>(new[] { "--output", "-o" }, "The output file to write the result to.");
+
+
+			rootCommand.Add(inPlaceOption);
+			rootCommand.Add(inputFileArgument);
+			rootCommand.Add(outputFileOption);
+
+			rootCommand.AddValidator(result =>
+			{
+				if (result.GetValueForOption(outputFileOption) != null &&
+					result.GetValueForOption(inPlaceOption))
+				{
+					result.ErrorMessage = "Options --output and --in-place cannot be used together.";
+				}
+			});
+
+			rootCommand.SetHandler(ExecuteAsync, inputFileArgument, inPlaceOption, outputFileOption);
+
 			return rootCommand;
 		}
-	}
-}
 
-
-/*
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace GuidReplace
-{
-	class Program
-	{
-		static void Main(string[] args)
+		private static Task ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
 		{
-			if (args.Length == 0)
-			{
-				Console.WriteLine($"Run with \"guidreplace filename\" or drag-n-drop file to exe");
-				Console.ReadKey();
-				return;
-			}
 
-			string filename = args[0].Trim('"');
+			//if (args.Length == 0)
+			//{
+			//	Console.WriteLine($"Run with \"guidreplace filename\" or drag-n-drop file to exe");
+			//	Console.ReadKey();
+			//	return;
+			//}
 
-			if (!File.Exists(filename))
+			//string filename = args[0].Trim('"');
+
+			if (!File.Exists(inputFilename))
 			{
 				Console.WriteLine($"File not found");
-				Console.WriteLine($"Press any key to exit");
-				Console.ReadKey();
-				return;
+				//Console.WriteLine($"Press any key to exit");
+				//Console.ReadKey();
+				return Task.CompletedTask;
 			}
 
-			string text = File.ReadAllText(filename);
+			string text = File.ReadAllText(inputFilename);
 			string pattern = "[a-fA-F0-9]{8}-([a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}";
 
 			Dictionary<Guid, Guid> pairs = new Dictionary<Guid, Guid>();
@@ -54,9 +72,9 @@ namespace GuidReplace
 			if (matches.Count <= 0)
 			{
 				Console.WriteLine($"No guids in file");
-				Console.WriteLine($"Press any key to exit");
-				Console.ReadKey();
-				return;
+				//Console.WriteLine($"Press any key to exit");
+				//Console.ReadKey();
+				return Task.CompletedTask;
 			}
 
 			int lastStart = 0;
@@ -87,15 +105,15 @@ namespace GuidReplace
 
 			sb.Append(text.Substring(lastStart));
 
-			FileInfo fi = new FileInfo(filename);
+			FileInfo fi = new FileInfo(inputFilename);
 			string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
 			string newFilename = $"{fi.Directory}\\{newName}{fi.Extension}";
 
 			File.WriteAllText(newFilename, sb.ToString());
 			Console.WriteLine($"Done. {matches.Count} guids replaced, {pairs.Count} pairs.");
-			Console.WriteLine($"Press any key to exit");
-			Console.ReadKey();
+			//Console.WriteLine($"Press any key to exit");
+
+			return Task.CompletedTask;
 		}
 	}
 }
-*/
