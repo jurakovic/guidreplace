@@ -37,7 +37,29 @@ Options:
 
 #### Examples
 
-todo
+Replace guids in a file and save to a new file
+
+```
+guidrep input.txt -o output.txt
+```
+
+Edit a file in place
+
+```
+guidrep -i input.txt
+```
+
+Using standard input and output
+
+```
+cat input.txt | guidrep -q > output.txt
+```
+
+Using standard input and save to a new file
+
+```
+cat input.txt | guidrep -o output.txt
+```
 
 ### Download
 
