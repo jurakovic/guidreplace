@@ -23,11 +23,14 @@ namespace GuidReplace
 				Arity = ArgumentArity.ZeroOrOne
 			};
 
-			var outputFileOption = new Option<string?>(new[] { "--output", "-o" }, "The output file to write the result to.");
+			var outputFileOption = new Option<string>(new[] { "--output", "-o" }, "The output file to write the result to.");
+
+			var quietOption = new Option<bool>(new[] { "--quiet", "-q" }, "Do not output messages to stdout");
 
 			rootCommand.Add(inPlaceOption);
 			rootCommand.Add(inputFileArgument);
 			rootCommand.Add(outputFileOption);
+			rootCommand.Add(quietOption);
 
 			rootCommand.AddValidator(result =>
 			{
@@ -38,12 +41,12 @@ namespace GuidReplace
 				}
 			});
 
-			rootCommand.SetHandler(ExecuteAsync, inputFileArgument, inPlaceOption, outputFileOption);
+			rootCommand.SetHandler(ExecuteAsync, inputFileArgument, inPlaceOption, outputFileOption, quietOption);
 
 			return rootCommand;
 		}
 
-		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
+		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename, bool quiet)
 		{
 			//Debugger.Launch();
 
@@ -54,7 +57,8 @@ namespace GuidReplace
 			{
 				if (!File.Exists(inputFilename))
 				{
-					Console.WriteLine($"File not found: {inputFilename}");
+					if (!quiet)
+						Console.Error.WriteLine($"File not found: {inputFilename}");
 					return 1;
 				}
 
@@ -68,7 +72,8 @@ namespace GuidReplace
 
 			if (String.IsNullOrWhiteSpace(inputText))
 			{
-				Console.WriteLine($"Input text empty");
+				if (!quiet)
+					Console.Error.WriteLine($"Input text empty");
 				return 1;
 			}
 
@@ -76,8 +81,9 @@ namespace GuidReplace
 
 			if (matchesCount <= 0)
 			{
-				Console.WriteLine($"No guids in file");
-				return 0;
+				if (!quiet)
+					Console.Error.WriteLine($"No guids in file");
+				return 1;
 			}
 
 			if (!string.IsNullOrEmpty(outputFilename))
@@ -98,7 +104,8 @@ namespace GuidReplace
 				await Console.Out.WriteAsync(outputText);
 			}
 
-			Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
+			if (!quiet)
+				Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
 
 			return 0;
 		}
