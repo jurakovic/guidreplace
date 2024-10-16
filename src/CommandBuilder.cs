@@ -71,7 +71,7 @@ namespace GuidReplace
 				else
 				{
 					if (!quiet)
-						Console.Error.WriteLine("Error: No input file specified and no data in stdin.");
+						Console.Error.WriteLine("Error: No input file specified and no data in stdin. Run 'guidrep -h' for usage.");
 					return 1;
 				}
 			}
