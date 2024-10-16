@@ -3,7 +3,9 @@
     "GuidReplace": {
       "commandName": "Project",
       "commandLineArgs1": "-h",
-      "commandLineArgs": "text1.txt"
+      "commandLineArgs2": "text1.txt",
+      "commandLineArgs3": "-i text1.txt",
+      "commandLineArgs": "text1.txt -o text_new.txt"
     }
   }
 }

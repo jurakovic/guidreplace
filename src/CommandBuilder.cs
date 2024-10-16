@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -42,35 +43,64 @@ namespace GuidReplace
 			return rootCommand;
 		}
 
-		private static Task ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
+		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename)
 		{
-			//string filename = args[0].Trim('"');
+			//Debugger.Launch();
 
-			if (!File.Exists(inputFilename))
+			//string filename = args[0].Trim('"');
+			string inputText;
+
+			if (!String.IsNullOrEmpty(inputFilename))
 			{
-				Console.WriteLine($"File not found");
-				return Task.CompletedTask;
+				if (!File.Exists(inputFilename))
+				{
+					Console.WriteLine($"File not found: {inputFilename}");
+					return 1;
+				}
+
+				inputText = await File.ReadAllTextAsync(inputFilename);
+			}
+			else
+			{
+				// Read from stdin
+				inputText = await Console.In.ReadToEndAsync();
 			}
 
-			string text = File.ReadAllText(inputFilename);
-			string output = ReplaceGuids(text, out int matchesCount, out int pairsCount);
+			if (String.IsNullOrWhiteSpace(inputText))
+			{
+				Console.WriteLine($"Input text empty");
+				return 1;
+			}
+
+			string outputText = ReplaceGuids(inputText, out int matchesCount, out int pairsCount);
 
 			if (matchesCount <= 0)
 			{
 				Console.WriteLine($"No guids in file");
-				return Task.CompletedTask;
+				return 0;
+			}
+
+			if (!string.IsNullOrEmpty(outputFilename))
+			{
+				await File.WriteAllTextAsync(outputFilename, outputText);
+			}
+			else if (inPlaceReplace && !String.IsNullOrEmpty(inputFilename))
+			{
+				await File.WriteAllTextAsync(inputFilename, outputText);
+			}
+			else if (!String.IsNullOrEmpty(inputFilename))
+			{
+				string newFileName = $"{Path.GetFileNameWithoutExtension(inputFilename)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}{Path.GetExtension(inputFilename)}";
+				await File.WriteAllTextAsync(newFileName, outputText);
 			}
 			else
 			{
-				FileInfo fi = new FileInfo(inputFilename);
-				string newName = $"{Path.GetFileNameWithoutExtension(fi.Name)}_{DateTime.Now.ToString("yyyy-MM-dd_HHmmss")}";
-				string newFilename = $"{newName}{fi.Extension}";
-
-				File.WriteAllText(newFilename, output);
-				Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
-
-				return Task.CompletedTask;
+				await Console.Out.WriteAsync(outputText);
 			}
+
+			Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
+
+			return 0;
 		}
 
 		static string ReplaceGuids(string text, out int matchesCount, out int pairsCount)
