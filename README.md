@@ -3,15 +3,18 @@
 
 `guidrep` is a simple command-line tool for replacing guids in text files or standard input. It reads the input, replaces all guids with new randomly generated ones, and ensures that any repeated guids in the original are replaced with the same new guid.
 
-This tool is especially useful for anonymizing data exports, resetting identifiers in configuration files, or preparing JSON data for re-import.
-
+This tool is especially useful for preparing JSON data for re-import, resetting identifiers in configuration files, or anonymizing data exports.
 
 ### Features
 
-- **File Processing**: Replace guids in a specified file, with options for in-place editing or outputting to a new file.
-- **Standard Input/Output Support**: Works with piped input and outputs to standard output.
-- **Flexible Output**: Save the results to a specified output file, or automatically generate a new filename based on the original.
-- **Cross-Platform**: Runs on Windows, Linux, and macOS.
+- **File Processing**
+	- Replace guids in a specified file, with options for in-place editing or outputting to a new file
+- **Standard Input/Output Support**
+	- Works with piped input and outputs to standard output
+- **Flexible Output**
+	- Save the results to a specified output file, or automatically generate a new filename based on the original
+- **Cross-Platform**
+	- Runs on Windows, Linux, and macOS
 
 ### Usage
 
@@ -19,7 +22,6 @@ This tool is especially useful for anonymizing data exports, resetting identifie
 $ guidrep -h
 Description:
   Guid Replace tool
-  For more information, visit https://github.com/jurakovic/guidreplace
 
 Usage:
   guidrep [<inputFile>] [options]
