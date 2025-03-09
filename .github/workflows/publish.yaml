@@ -36,12 +36,9 @@ jobs:
       
       - name: Publish
         run: |
-          cat /proc/version
-          dotnet --version
-          echo "Version: ${{ inputs.version }}"
-          ls -la
           chmod +x ./publish.sh
-          ./publish.sh -h
+          ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u
+          find publish
         shell: bash
 
 #      - name: Publish Application
