@@ -31,6 +31,7 @@ jobs:
         run: |
           dotnet --version
           ls -la
+          chmod +x ./publish.sh
           ./publish.sh -h
         shell: bash
 
