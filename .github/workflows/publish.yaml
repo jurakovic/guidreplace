@@ -10,19 +10,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    #runs-on: ${{ matrix.os }}
-    #strategy:
-    #  matrix:
-    #    os: [ubuntu-latest, windows-latest, macos-latest]
-    #    rid: [linux-x64, win-x64, osx-x64]  # Adjust as needed
-    #    include:
-    #      - os: ubuntu-latest
-    #        ext: ""
-    #      - os: windows-latest
-    #        ext: ".exe"
-    #      - os: macos-latest
-    #        ext: ""
+    #runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rid: [linux-x64, win-x64, osx-x64]  # Adjust as needed
+        include:
+          - os: ubuntu-latest
+            ext: ""
+          - os: windows-latest
+            ext: ".exe"
+          - os: macos-latest
+            ext: ""
     
     steps:
       - name: Checkout Code
@@ -35,6 +35,7 @@ jobs:
       
       - name: Publish
         run: |
+          cat /proc/version
           dotnet --version
           echo "Version: ${{ inputs.version }}"
           ls -la
