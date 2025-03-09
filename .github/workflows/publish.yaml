@@ -43,19 +43,13 @@ jobs:
           find release
         shell: bash
 
-#      - name: Publish Application
-#        run: dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true -o publish/${{ matrix.rid }}
-#      
-#      - name: Archive Binary
-#        run: |
-#          zip -r app-${{ matrix.rid }}.zip publish/${{ matrix.rid }}
-#        shell: bash
-#
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: app-${{ matrix.rid }}
-#          path: app-${{ matrix.rid }}.zip
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: guidrep-${{ inputs.version }}-${{ matrix.rid }}
+          path: |
+              release/guidrep_${{ inputs.version }}_${{ matrix.rid }}.zip
+              release/checksums.txt
 
 #  release:
 #    needs: build
