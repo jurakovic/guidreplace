@@ -21,9 +21,9 @@ jobs:
           - os: windows-latest
             rid: win-x64
             ext: ".exe"
-          - os: macos-latest
-            rid: osx-x64
-            ext: ""
+          #- os: macos-latest
+          #  rid: osx-x64
+          #  ext: ""
     
     steps:
       - name: Checkout Code
@@ -37,7 +37,7 @@ jobs:
       - name: Publish
         run: |
           chmod +x ./publish.sh
-          ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u
+          ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
           find publish
         shell: bash
 
