@@ -39,6 +39,8 @@ jobs:
           chmod +x ./publish.sh
           ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
           find publish
+          ./publish.sh package -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
+          find release
         shell: bash
 
 #      - name: Publish Application

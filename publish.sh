@@ -51,7 +51,7 @@ function package() {
 
     case "$ARCH" in
       win*) assembly_ext=".exe" ;;
-      *) archive_ext=".tar.gz" ;;
+      #*) archive_ext=".tar.gz" ;;
     esac
 
     local release_path="release/$ARCH"
@@ -62,7 +62,8 @@ function package() {
     mkdir -p $release_path
     cp $publish_path/$assembly_name$assembly_ext $release_path
 
-    tar -C "$release_path/" -a -c -f "$archive_path" "$assembly_full"
+    #tar -C "$release_path/" -a -c -f "$archive_path" "$assembly_full"
+    zip -r -9 "$archive_path" "$release_path"
 
     local sha256=$(sha256sum$assembly_ext "$archive_path" | cut -d " " -f 1)
     echo "$sha256  $archive_name" >> $release_path/../checksums.txt
