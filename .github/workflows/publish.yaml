@@ -1,6 +1,12 @@
 name: Release App
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -30,6 +36,7 @@ jobs:
       - name: Publish
         run: |
           dotnet --version
+          echo "Version: ${{ inputs.version }}"
           ls -la
           chmod +x ./publish.sh
           ./publish.sh -h
