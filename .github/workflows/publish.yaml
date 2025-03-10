@@ -17,10 +17,10 @@ jobs:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-          - os: windows-latest
-            rid: win-x64
-          - os: macos-latest
-            rid: osx-x64
+          #- os: windows-latest
+          #  rid: win-x64
+          #- os: macos-latest
+          #  rid: osx-x64
     
     steps:
       - name: Checkout Code
@@ -57,6 +57,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -70,10 +73,10 @@ jobs:
           cp artifacts/**/*.zip release
           find release
         shell: bash
-#
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          files: artifacts/**/*
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
