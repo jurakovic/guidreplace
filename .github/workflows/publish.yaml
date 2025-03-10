@@ -62,9 +62,13 @@ jobs:
         with:
           path: artifacts
 
-      - name: Check Artifacts
+      - name: Prepare Release
         run: |
           find artifacts
+          mkdir release
+          cat artifacts/**/checksums_*.txt >> release/checksums.txt
+          cp artifacts/**/*.zip release
+          find release
         shell: bash
 #
 #      - name: Create GitHub Release
