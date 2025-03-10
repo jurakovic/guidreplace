@@ -66,7 +66,7 @@ function package() {
     zip -r -9 "$archive_path" "$release_path"
 
     local sha256=$(sha256sum$assembly_ext "$archive_path" | cut -d " " -f 1)
-    echo "$sha256  $archive_name" >> $release_path/../checksums.txt
+    echo "$sha256  $archive_name" >> $release_path/../checksums_${ARCH}.txt
 
     echo -e "${Color_Green}Package OK${Color_Off}"
 }

@@ -17,13 +17,10 @@ jobs:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-            ext: ""
           - os: windows-latest
             rid: win-x64
-            ext: ".exe"
           #- os: macos-latest
           #  rid: osx-x64
-          #  ext: ""
     
     steps:
       - name: Checkout Code
@@ -33,7 +30,12 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
-      
+
+      - name: Install zip (Windows)
+        if: runner.os == 'Windows'
+        run: choco install zip -y
+        shell: bash
+
       - name: Publish
         run: |
           chmod +x ./publish.sh
@@ -46,10 +48,10 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: guidrep-${{ inputs.version }}-${{ matrix.rid }}
+          name: guidrep_${{ inputs.version }}_${{ matrix.rid }}
           path: |
               release/guidrep_${{ inputs.version }}_${{ matrix.rid }}.zip
-              release/checksums.txt
+              release/checksums_${{ matrix.rid }}.txt
 
 #  release:
 #    needs: build
