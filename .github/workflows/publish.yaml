@@ -65,6 +65,12 @@ jobs:
         with:
           path: artifacts
 
+      - name: Git Tag
+        run: |
+          chmod +x ./publish.sh
+          ./publish.sh publish -v "${{ inputs.version }}" -u true
+        shell: bash
+
       - name: Prepare Release
         run: |
           find artifacts
