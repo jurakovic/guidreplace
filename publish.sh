@@ -47,26 +47,23 @@ function package() {
     local publish_path="publish/$ARCH"
     local assembly_name="guidrep"
     local assembly_ext=""
-    local archive_ext=".zip"
 
     case "$ARCH" in
       win*) assembly_ext=".exe" ;;
-      #*) archive_ext=".tar.gz" ;;
     esac
 
     local release_path="release/$ARCH"
-    local archive_name="${assembly_name}_${VERSION}_${ARCH}${archive_ext}"
+    local archive_name="${assembly_name}_${VERSION}_${ARCH}.zip"
     local archive_path="$release_path/../$archive_name"
-    local assembly_full="${assembly_name}${assembly_ext}"
+    local assembly_full="${assembly_name}_${ARCH}${assembly_ext}"
 
     mkdir -p $release_path
-    cp $publish_path/$assembly_name$assembly_ext $release_path
+    cp "$publish_path/$assembly_name$assembly_ext" "$release_path/${assembly_full}"
 
-    #tar -C "$release_path/" -a -c -f "$archive_path" "$assembly_full"
     zip -r -9 "$archive_path" "$release_path"
 
-    local sha256=$(sha256sum$assembly_ext "$archive_path" | cut -d " " -f 1)
-    echo "$sha256  $archive_name" >> $release_path/../checksums_${ARCH}.txt
+    local sha256=$(sha256sum$assembly_ext "$release_path/${assembly_full}" | cut -d " " -f 1)
+    echo "$sha256  ${assembly_name}_${ARCH}${assembly_ext}" >> $release_path/../checksums_${ARCH}.txt
 
     echo -e "${Color_Green}Package OK${Color_Off}"
 }
