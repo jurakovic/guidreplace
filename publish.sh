@@ -47,9 +47,16 @@ function package() {
     local publish_path="publish/$ARCH"
     local assembly_name="guidrep"
     local assembly_ext=""
+	local shacmd=""
 
     case "$ARCH" in
       win*) assembly_ext=".exe" ;;
+    esac
+
+    case "$ARCH" in
+      lin*) shacmd="sha256sum" ;;
+      win*) shacmd="sha256sum$assembly_ext" ;;
+      mac*) shacmd="shasum -a 256" ;;
     esac
 
     local release_path="release/$ARCH"
@@ -62,7 +69,7 @@ function package() {
 
     zip -r -9 "$archive_path" "$release_path"
 
-    local sha256=$(sha256sum$assembly_ext "$release_path/${assembly_full}" | cut -d " " -f 1)
+    local sha256=$($shacmd "$release_path/${assembly_full}" | cut -d " " -f 1)
     echo "$sha256  ${assembly_name}_${ARCH}${assembly_ext}" >> $release_path/../checksums_${ARCH}.txt
 
     echo -e "${Color_Green}Package OK${Color_Off}"
