@@ -72,6 +72,7 @@ jobs:
         run: |
           git config user.name "jurakovic"
           git config user.email "17744091+jurakovic@users.noreply.github.com"
+          git fetch
           chmod +x ./publish.sh
           ./publish.sh release -v "${{ inputs.version }}" -u true
         shell: bash
