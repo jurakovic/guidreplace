@@ -13,29 +13,20 @@ on:
 
 jobs:
   build:
-    #runs-on: ubuntu-latest
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-          #- os: windows-latest
-          #  rid: win-x64
-          #- os: macos-latest
-          #  rid: osx-x64
+          - os: windows-latest
+            rid: win-x64
+          - os: macos-latest
+            rid: osx-x64
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-#      - name: Debug Checkout
-#        run: |
-#          git branch --all
-#          git fetch
-#          git branch --all
-#          git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
-#        shell: bash
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -82,24 +73,23 @@ jobs:
         run: |
           git config user.name "jurakovic"
           git config user.email "17744091+jurakovic@users.noreply.github.com"
-          git fetch
           chmod +x ./publish.sh
           ./publish.sh release -v "${{ inputs.version }}" -u true
         shell: bash
 
-#      - name: Prepare Release
-#        run: |
-#          find artifacts
-#          mkdir release
-#          cp artifacts/**/*.zip release
-#          cd release && find . -name "*.zip" -exec sha256sum {} \; | sed 's;./;;' > checksums.txt && cd - > /dev/null
-#          find release
-#        shell: bash
-#
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: "v${{ inputs.version }}"
-#          files: release/*
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare Release
+        run: |
+          find artifacts
+          mkdir release
+          cp artifacts/**/*.zip release
+          cd release && find . -name "*.zip" -exec sha256sum {} \; | sed 's;./;;' > checksums.txt && cd - > /dev/null
+          find release
+        shell: bash
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ inputs.version }}"
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
