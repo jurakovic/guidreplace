@@ -54,7 +54,7 @@ jobs:
           name: guidrep_${{ inputs.version }}_${{ matrix.rid }}
           path: |
               release/guidrep_${{ inputs.version }}_${{ matrix.rid }}.zip
-              release/checksums_${{ matrix.rid }}.txt
+              release/checksums.txt
 
   release:
     needs: build
