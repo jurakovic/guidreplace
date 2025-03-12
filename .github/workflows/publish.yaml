@@ -34,7 +34,7 @@ jobs:
           git branch --all
           git fetch
           git branch --all
-          git switch -c release origin/release
+          git checkout release >/dev/null 2>&1 && git pull || git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
         shell: bash
 
 #      - name: Setup .NET
