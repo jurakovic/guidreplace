@@ -83,7 +83,7 @@ function release() {
   fi
 
   #git checkout release >/dev/null 2>&1 && git pull || git checkout -b release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
-  git checkout -b release origin/release
+  git checkout -b release origin/release --force
   git branch -r
   git show-ref refs/remotes/origin/release
 
