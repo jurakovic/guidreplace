@@ -62,15 +62,15 @@ function package() {
   local release_path="release/$ARCH"
   local archive_name="${assembly_name}_${VERSION}_${ARCH}.zip"
   local archive_path="$release_path/../$archive_name"
-  local assembly_full="${assembly_name}_${ARCH}${assembly_ext}"
+  local assembly_full="${assembly_name}${assembly_ext}"
 
   mkdir -p $release_path
-  cp "$publish_path/$assembly_name$assembly_ext" "$release_path/${assembly_full}"
+  cp "$publish_path/$assembly_full" "$release_path"
 
-  zip -r -9 "$archive_path" "$release_path"
+  cd $release_path && zip -r -9 "../$archive_name" "$assembly_full" && cd - > /dev/null
 
-  local sha256=$($shacmd "$release_path/${assembly_full}" | cut -d " " -f 1)
-  echo "$sha256  ${assembly_name}_${ARCH}${assembly_ext}" >> $release_path/../checksums_${ARCH}.txt
+  local sha256=$($shacmd "$archive_path" | cut -d " " -f 1)
+  echo "$sha256  $archive_name" >> $release_path/../checksums.txt
 
   echo -e "${Color_Green}Package OK${Color_Off}"
 }

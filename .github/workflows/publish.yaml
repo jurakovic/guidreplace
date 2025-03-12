@@ -78,8 +78,8 @@ jobs:
         run: |
           find artifacts
           mkdir release
-          cat artifacts/**/checksums_*.txt >> release/checksums.txt
           cp artifacts/**/*.zip release
+          find . -name "*.zip" -exec sha256sum {} \; > checksums.txt
           find release
         shell: bash
 
