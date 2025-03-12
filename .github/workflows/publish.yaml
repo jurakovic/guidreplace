@@ -32,6 +32,8 @@ jobs:
       - name: Debug Checkout
         run: |
           git branch --all
+          git fetch
+          git branch --all
         shell: bash
 
 #      - name: Setup .NET
