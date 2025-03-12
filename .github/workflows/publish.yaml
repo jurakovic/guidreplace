@@ -29,13 +29,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Debug Checkout
-        run: |
-          git branch --all
-          git fetch
-          git branch --all
-          git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
-        shell: bash
+#      - name: Debug Checkout
+#        run: |
+#          git branch --all
+#          git fetch
+#          git branch --all
+#          git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+#        shell: bash
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
