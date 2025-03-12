@@ -8,7 +8,7 @@ MESSAGE=""
 VERSION="auto"
 BUMP_TYPE="patch"
 PREVIEW="auto"
-ARCH="win-x64"
+ARCH=""
 UNATTENDED="false"
 
 # Allowed values
@@ -92,12 +92,6 @@ function release() {
   echo "BRANCH:    $BRANCH"    >> version
   echo "COMMIT:    $COMMIT"    >> version
   echo "URL:       $url"       >> version
-
-  if [ ! -z "$GITHUB_ACTIONS" ];
-  then
-    git config user.name "jurakovic"
-    git config user.email "17744091+jurakovic@users.noreply.github.com"
-  fi
 
   git add version
   git commit -m "v$VERSION ($BRANCH)"
@@ -224,7 +218,7 @@ function help() {
   echo "  -v, --version <VERSION>        auto*, x.y.z"
   echo "  -b, --bump_type <BUMP_TYPE>    major, minor, patch*"
   echo "  -p, --preview <PREVIEW>        auto*, true, false"
-  echo "  -a, --arch <ARCH>              win-x64*, linux-x64"
+  echo "  -a, --arch <ARCH>              win-x64, linux-x64, osx-x64"
   echo "  -u, --unattended <UNATTENDED>  true, false*"
   echo "  -h, --help"
   echo "                                 * Default value"

@@ -20,11 +20,11 @@ jobs:
         include:
           - os: ubuntu-latest
             rid: linux-x64
-          #- os: windows-latest
-          #  rid: win-x64
-          #- os: macos-latest
-          #  rid: osx-x64
-    
+          - os: windows-latest
+            rid: win-x64
+          - os: macos-latest
+            rid: osx-x64
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -70,6 +70,8 @@ jobs:
 
       - name: Git Tag
         run: |
+          git config user.name "jurakovic"
+          git config user.email "17744091+jurakovic@users.noreply.github.com"
           chmod +x ./publish.sh
           ./publish.sh release -v "${{ inputs.version }}" -u true
         shell: bash
@@ -79,7 +81,7 @@ jobs:
           find artifacts
           mkdir release
           cp artifacts/**/*.zip release
-          find . -name "*.zip" -exec sha256sum {} \; > checksums.txt
+          cd release && find . -name "*.zip" -exec sha256sum {} \; | sed 's;./;;' > checksums.txt && cd - > /dev/null
           find release
         shell: bash
 
