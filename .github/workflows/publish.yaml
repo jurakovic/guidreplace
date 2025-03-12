@@ -34,6 +34,7 @@ jobs:
           git branch --all
           git fetch
           git branch --all
+          git switch -c release origin/release
         shell: bash
 
 #      - name: Setup .NET
