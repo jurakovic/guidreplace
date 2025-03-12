@@ -83,6 +83,8 @@ function release() {
   fi
 
   git checkout release >/dev/null 2>&1 && git pull || git checkout -b release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+  git branch -r
+  git status
 
   local url="https://github.com/jurakovic/guidreplace/releases/tag/v$VERSION"
 
