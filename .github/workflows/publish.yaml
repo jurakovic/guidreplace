@@ -34,57 +34,58 @@ jobs:
           git branch --all
           git fetch
           git branch --all
-          git checkout release >/dev/null 2>&1 && git pull || git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+          git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
         shell: bash
 
-#      - name: Setup .NET
-#        uses: actions/setup-dotnet@v3
-#        with:
-#          dotnet-version: '8.0.x'
-#
-#      - name: Install zip (Windows)
-#        if: runner.os == 'Windows'
-#        run: choco install zip -y
-#        shell: bash
-#
-#      - name: Publish
-#        run: |
-#          chmod +x ./publish.sh
-#          ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
-#          find publish
-#          ./publish.sh package -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
-#          find release
-#        shell: bash
-#
-#      - name: Upload Artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: guidrep_${{ inputs.version }}_${{ matrix.rid }}
-#          path: |
-#              release/guidrep_${{ inputs.version }}_${{ matrix.rid }}.zip
-#              release/checksums.txt
-#
-#  release:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#
-#      - name: Download All Artifacts
-#        uses: actions/download-artifact@v4
-#        with:
-#          path: artifacts
-#
-#      - name: Git Tag
-#        run: |
-#          git config user.name "jurakovic"
-#          git config user.email "17744091+jurakovic@users.noreply.github.com"
-#          git fetch
-#          chmod +x ./publish.sh
-#          ./publish.sh release -v "${{ inputs.version }}" -u true
-#        shell: bash
-#
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install zip (Windows)
+        if: runner.os == 'Windows'
+        run: choco install zip -y
+        shell: bash
+
+      - name: Publish
+        run: |
+          chmod +x ./publish.sh
+          ./publish.sh publish -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
+          find publish
+          ./publish.sh package -v "${{ inputs.version }}" -a "${{ matrix.rid }}" -u true
+          find release
+        shell: bash
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: guidrep_${{ inputs.version }}_${{ matrix.rid }}
+          path: |
+              release/guidrep_${{ inputs.version }}_${{ matrix.rid }}.zip
+              release/checksums.txt
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Git Tag
+        run: |
+          git config user.name "jurakovic"
+          git config user.email "17744091+jurakovic@users.noreply.github.com"
+          git fetch
+          git switch -c release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+          chmod +x ./publish.sh
+          ./publish.sh release -v "${{ inputs.version }}" -u true
+        shell: bash
+
 #      - name: Prepare Release
 #        run: |
 #          find artifacts
