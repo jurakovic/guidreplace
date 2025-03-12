@@ -82,7 +82,8 @@ function release() {
     if [ ! $yn = "y" ]; then exit; fi
   fi
 
-  git checkout release >/dev/null 2>&1 && git pull || git checkout -b release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+  #git checkout release >/dev/null 2>&1 && git pull || git checkout -b release origin/release >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
+  git checkout -b release origin/release
   git branch -r
   git show-ref refs/remotes/origin/release
 
