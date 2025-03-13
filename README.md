@@ -132,3 +132,7 @@ Output:
 	bin/Release/net9.0/linux-x64/publish/guidrep -h
 	# mv guidrep to desired path
 	```
+
+### Credits
+
+Inspired by [this](https://stackoverflow.com/questions/2201740/replacing-all-guids-in-a-file-with-new-guids-from-the-command-line) Stack Overflow question and answers.
