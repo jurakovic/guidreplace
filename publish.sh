@@ -84,7 +84,7 @@ function release() {
 
   git checkout release >/dev/null 2>&1 && git pull || git checkout -b release origin/release --force >/dev/null 2>&1 || git checkout --orphan release && git reset --hard
 
-  local url="https://github.com/jurakovic/guidreplace/releases/tag/v$VERSION"
+  local url="$(git remote get-url origin | sed -E 's/\.git$//')/releases/tag/v$VERSION"
 
   echo "VERSION:   $VERSION"    > version
   echo "BUMP_TYPE: $BUMP_TYPE" >> version
