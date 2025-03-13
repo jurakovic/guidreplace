@@ -130,7 +130,7 @@ namespace GuidReplace
 				return null;
 
 			int lastStart = 0;
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder(text.Length);
 
 			Match firstMatch = matches[0];
 			string firstString = text.Substring(firstMatch.Index, 36);
