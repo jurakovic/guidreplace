@@ -73,16 +73,16 @@ cat input.txt | guidrep -o output.txt
 
 2. Clone the repository
 
-    ```bash
-    git clone https://github.com/jurakovic/guidreplace.git
-    cd guidreplace
-    ```
+	```bash
+	git clone https://github.com/jurakovic/guidreplace.git
+	cd guidreplace
+	```
 
 3. Build (publish) with `dotnet`
 
-    ```bash
-    cd src
-    dotnet publish -c Release --self-contained
-    bin/Release/net8.0/linux-x64/publish/guidrep -h
-    # mv to desired path
-    ```
+	```bash
+	cd src
+	dotnet publish -c Release --self-contained
+	bin/Release/net8.0/linux-x64/publish/guidrep -h
+	# mv guidrep to desired path
+	```
