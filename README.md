@@ -1,14 +1,14 @@
 
 # Guid Replace
 
-`guidrep` is a simple command-line tool for replacing guids in text files or standard input. It reads the input, replaces all guids with new randomly generated ones, and ensures that any repeated guids in the original are replaced with the same new guid.
+`guidrep` is a simple command-line tool for replacing GUIDs (UUIDs) in text files or standard input. It reads the input, replaces all GUIDs with new randomly generated ones, and ensures that any repeated GUIDs in the original are replaced with the same new GUID.
 
 This tool is especially useful for preparing JSON data for re-import, anonymizing data exports, or resetting identifiers in configuration files.
 
 ### Features
 
 - **File Processing**
-	- replace guids in a specified file, with options for in-place editing or outputting to a new file
+	- replace GUIDs in a specified file, with options for in-place editing or outputting to a new file
 - **Standard Input/Output Support**
 	- works with piped input and outputs to standard output
 - **Flexible Output**
@@ -41,13 +41,13 @@ Options:
   -?, -h, --help         Show help and usage information
 ```
 
-Replace guids in a file and save to a new file
+Replace GUIDs in a file and save to a new file
 
 ```
 guidrep input.txt -o output.txt
 ```
 
-Replace guids in a file and save to a new automatically created file
+Replace GUIDs in a file and save to a new automatically created file
 
 ```
 guidrep input.txt
