@@ -25,7 +25,7 @@ This tool is especially useful for preparing JSON data for re-import, anonymizin
 ```text
 $ guidrep -h
 Description:
-  Guid Replace tool
+  GUID Replace tool
 
 Usage:
   guidrep [<inputFile>] [options]
