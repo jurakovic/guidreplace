@@ -146,12 +146,9 @@ namespace GuidReplace
 					pairs.Add(oldGuid, Guid.NewGuid());
 
 				Guid newGuid = pairs[oldGuid];
-				string newString = newGuid.ToString();
-
-				if (isUpper)
-					newString = newString.ToUpper();
-
+				string newString = isUpper ? newGuid.ToString().ToUpper() : newGuid.ToString();
 				sb.Append(newString);
+
 				lastStart = m.Index + m.Length;
 			}
 
