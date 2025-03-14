@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "GuidReplace": {
+      "commandName": "Project",
+      "commandLineArgs1": "-h",
+      "commandLineArgs2": "text1.txt",
+      "commandLineArgs3": "-i text1.txt",
+      "commandLineArgs": "text1.txt -o text_new.txt"
+    }
+  }
+}
