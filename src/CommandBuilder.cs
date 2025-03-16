@@ -13,7 +13,7 @@ namespace GuidReplace
 	{
 		public static RootCommand CreateRootCommand()
 		{
-			var rootCommand = new RootCommand("Guid Replace tool\nFor more information, visit https://github.com/jurakovic/guidreplace");
+			var rootCommand = new RootCommand("GUID Replace tool\nFor more information, visit https://github.com/jurakovic/guidreplace");
 
 			var inPlaceOption = new Option<bool>(["--in-place", "-i"], "Edit the input file in place");
 
@@ -85,7 +85,7 @@ namespace GuidReplace
 			if (matchesCount <= 0)
 			{
 				if (!quiet)
-					Console.Error.WriteLine($"No guids in file");
+					Console.Error.WriteLine($"No GUIDs in file");
 				return 1;
 			}
 
@@ -111,7 +111,7 @@ namespace GuidReplace
 			}
 
 			if (!quiet)
-				Console.WriteLine($"Done. {matchesCount} guids replaced, {pairsCount} pairs.");
+				Console.WriteLine($"Done. {matchesCount} GUIDs replaced, {pairsCount} pairs.");
 
 			return 0;
 		}
@@ -146,12 +146,9 @@ namespace GuidReplace
 					pairs.Add(oldGuid, Guid.NewGuid());
 
 				Guid newGuid = pairs[oldGuid];
-				string newString = newGuid.ToString();
-
-				if (isUpper)
-					newString = newString.ToUpper();
-
+				string newString = isUpper ? newGuid.ToString().ToUpper() : newGuid.ToString();
 				sb.Append(newString);
+
 				lastStart = m.Index + m.Length;
 			}
 
