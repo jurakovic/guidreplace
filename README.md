@@ -34,11 +34,12 @@ Arguments:
   <inputFile>  The input file to process. If not specified, reads from standard input.
 
 Options:
-  -i, --in-place         Edit the input file in place
-  -o, --output <output>  The output file to write the result to
-  -q, --quiet            Do not output messages to standard output
-  --version              Show version information
-  -?, -h, --help         Show help and usage information
+  -i, --in-place                     Edit the input file in place
+  -o, --output <output>              The output file to write the result to
+  -x, --exclude-guid <exclude-guid>  Leave this GUID unchanged. Can be specified multiple times.
+  -q, --quiet                        Do not output messages to standard output
+  --version                          Show version information
+  -?, -h, --help                     Show help and usage information
 ```
 
 Replace GUIDs in a file and save to a new file

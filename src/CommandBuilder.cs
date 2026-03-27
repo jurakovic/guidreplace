@@ -24,11 +24,17 @@ namespace GuidReplace
 
 			var outputFileOption = new Option<string>(["--output", "-o"], "The output file to write the result to");
 
+			var excludeGuidsOption = new Option<string[]>(["--exclude-guid", "-x"], "Leave this GUID unchanged. Can be specified multiple times.")
+			{
+				Arity = ArgumentArity.ZeroOrMore
+			};
+
 			var quietOption = new Option<bool>(["--quiet", "-q"], "Do not output messages to standard output");
 
 			rootCommand.Add(inPlaceOption);
 			rootCommand.Add(inputFileArgument);
 			rootCommand.Add(outputFileOption);
+			rootCommand.Add(excludeGuidsOption);
 			rootCommand.Add(quietOption);
 
 			rootCommand.AddValidator(result =>
@@ -37,12 +43,12 @@ namespace GuidReplace
 					result.ErrorMessage = "Options --output and --in-place cannot be used together.";
 			});
 
-			rootCommand.SetHandler(ExecuteAsync, inputFileArgument, inPlaceOption, outputFileOption, quietOption);
+			rootCommand.SetHandler(ExecuteAsync, inputFileArgument, inPlaceOption, outputFileOption, excludeGuidsOption, quietOption);
 
 			return rootCommand;
 		}
 
-		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename, bool quiet)
+		private static async Task<int> ExecuteAsync(string inputFilename, bool inPlaceReplace, string outputFilename, string[] excludeGuids, bool quiet)
 		{
 			//System.Diagnostics.Debugger.Launch();
 
@@ -80,7 +86,23 @@ namespace GuidReplace
 				return 1;
 			}
 
-			string outputText = ReplaceGuids(inputText, out int matchesCount, out int pairsCount);
+			HashSet<Guid> excludedGuidsSet;
+			if (excludeGuids == null)
+			{
+				excludedGuidsSet = [];
+			}
+			else
+			{
+				excludedGuidsSet = ParseGuids(excludeGuids);
+				if (excludedGuidsSet == null)
+				{
+					if (!quiet)
+						Console.Error.WriteLine("Invalid ignored GUID specified");
+					return 1;
+				}
+			}
+
+			string outputText = ReplaceGuids(inputText, excludedGuidsSet, out int matchesCount, out int pairsCount);
 
 			if (matchesCount <= 0)
 			{
@@ -116,7 +138,7 @@ namespace GuidReplace
 			return 0;
 		}
 
-		static string ReplaceGuids(string text, out int matchesCount, out int pairsCount)
+		static string ReplaceGuids(string text, HashSet<Guid> ignoreGuids, out int matchesCount, out int pairsCount)
 		{
 			string pattern = "[a-fA-F0-9]{8}-([a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}";
 
@@ -145,7 +167,7 @@ namespace GuidReplace
 				if (!pairs.ContainsKey(oldGuid))
 					pairs.Add(oldGuid, Guid.NewGuid());
 
-				Guid newGuid = pairs[oldGuid];
+				Guid newGuid = ignoreGuids.Contains(oldGuid) ? oldGuid : pairs[oldGuid];
 				string newString = isUpper ? newGuid.ToString().ToUpper() : newGuid.ToString();
 				sb.Append(newString);
 
@@ -155,6 +177,20 @@ namespace GuidReplace
 			pairsCount = pairs.Count;
 			sb.Append(text.Substring(lastStart));
 			return sb.ToString();
+		}
+
+		private static HashSet<Guid> ParseGuids(string[] guids)
+		{
+			var result = new HashSet<Guid>(guids.Length);
+			foreach (var guid in guids)
+			{
+				if (!Guid.TryParse(guid, out var parsedGuid))
+				{
+					return null;
+				}
+				result.Add(parsedGuid);
+			}
+			return result;
 		}
 	}
 }
